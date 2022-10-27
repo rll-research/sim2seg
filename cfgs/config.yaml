@@ -1,0 +1,92 @@
+defaults:
+  - _self_
+  - task@_global_: buggy
+  - override hydra/launcher: submitit_local
+
+# task settings
+frame_stack: 1
+action_repeat: 1
+discount: 0.99
+
+# train settings
+num_seed_frames: 400
+n_update: 1
+
+# eval
+eval_every_frames: 10000
+num_eval_episodes: 2
+
+# snapshot
+save_snapshot: true
+
+# replay buffer
+replay_buffer_size: 100000
+replay_buffer_num_workers: 4
+nstep: 3
+batch_size: 100
+her_ratio: 0.8
+
+# misc
+seed: 0
+device: 0
+save_video: true
+save_train_video: false
+use_tb: true
+
+# experiment
+experiment_folder: folder
+experiment_name: exp1
+
+# agent
+lr: 1e-4
+feature_dim: 50
+save_every_frames: 10000
+snapshot_dir: "snapshots"
+restore_snapshot_path: None
+s2s_mode: meadow_depth # ["meadow", "canyon", "rl", "meadow_depth", "canyon_depth", "rl_depth"]
+s2s_device: 0 
+use_wandb: False
+base_port: 5228
+
+# swapping between envs
+switch_every_frames: 10000
+use_switch_every: False
+
+# env settings
+use_s2s: True
+seq_goal: True
+final_eval: False # eval environment has 2 POV (aerial and front camera)
+num_odom: 10
+
+agent:
+  _target_: drqv2.DrQV2LSTMAgent
+  obs_shape: ??? # to be specified later
+  action_shape: ??? # to be specified later
+  device: ${device}
+  lr: ${lr}
+  critic_target_tau: 0.01
+  update_every_steps: 2
+  use_tb: ${use_tb}
+  num_expl_steps: 2000
+  hidden_dim: 1024
+  lstm_hidden_dim: 512
+  feature_dim: ${feature_dim}
+  stddev_schedule: ${stddev_schedule}
+  stddev_clip: 0.3
+  num_actions: 5
+  use_s2s: ${use_s2s}
+
+hydra:
+  run:
+    dir: ./exp_local/${experiment_folder}/${experiment_name}
+  sweep:
+    dir: ./exp/${now:%Y.%m.%d}/${now:%H%M}_${agent_cfg.experiment}
+    subdir: ${hydra.job.num}
+  launcher:
+    timeout_min: 4300
+    cpus_per_task: 10
+    gpus_per_node: 1
+    tasks_per_node: 1
+    mem_gb: 160
+    nodes: 1
+    submitit_folder: ./exp/${now:%Y.%m.%d}/${now:%H%M%S}_${agent_cfg.experiment}/.slurm

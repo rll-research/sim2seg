@@ -1,0 +1,17 @@
+defaults:
+  - medium
+  - _self_
+
+# set use_switch_every=True to use multiple environments
+eval_task_names: ["ENV1", "ENV2", "ENV3"]
+train_task_names: ["ENV1", "ENV2", "ENV3"]
+
+eval_task_name: "0915_simple/0915_simple_sim_viz"
+train_task_name: "0915_simple/0915_simple_sim_frontcam"
+
+# reward shaping
+lambda_steer: 10
+lambda_accel: 0
+lambda_upright: 10
+lambda_lp: 1
+lambda_prox: 0
