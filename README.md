@@ -47,6 +47,8 @@ To train on multiple environments set `use_switch_every=True` and set `eval_task
 
 To train without Sim2Seg, set `use_s2s=False`. 
 
+To train headlessly, refer [here](https://github.com/stepjam/RLBench#running-headless) for headless rendering w/ VirtualGL!
+
 ## Citations
 If you use this code for your research, please cite our paper:
 ```sh
