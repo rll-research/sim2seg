@@ -271,7 +271,7 @@ class Pix2SegDepthModel(BaseModel):
                 pass
             elif 'fake_B' in name or 'real_B' in name:
                 inds = getattr(self, name)
-                img = COLORS_TORCH_DECODE6[torch.argmax(inds, dim=1).long()].permute(0, 3, 1, 2).float()
+                img = self.COLORS_TORCH_DECODE[torch.argmax(inds, dim=1).long()].permute(0, 3, 1, 2).float()
                 visual_ret[name] = img / 255
             visual_ret[name] = visual_ret[name] * 2 - 1
 
@@ -285,7 +285,7 @@ class Pix2SegDepthModel(BaseModel):
                     pass
                 elif 'fake_B' in val_name or 'real_B' in val_name:
                     inds = getattr(self, name)
-                    img = COLORS_TORCH_DECODE6[torch.argmax(inds, dim=1).long()].permute(0, 3, 1, 2).float()
+                    img = self.COLORS_TORCH_DECODE[torch.argmax(inds, dim=1).long()].permute(0, 3, 1, 2).float()
                     visual_ret[val_name] = img / 255
                 visual_ret[val_name] = visual_ret[val_name] * 2 - 1
             
